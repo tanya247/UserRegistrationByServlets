@@ -2,6 +2,8 @@ package com.bridgelabz.UserRegistrationByServlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -13,12 +15,8 @@ import javax.servlet.*;
 
 @WebServlet(
 		description = "Login Servlet Testing",
-		urlPatterns = {"/LoginServlet"},
-		initParams = {
-				@WebInitParam(name = "user", value = "Tanya"),
-				@WebInitParam(name = "password", value = "Ruchi@7890")
-				
-		}
+		urlPatterns = {"/LoginServlet"}
+		
 )		
 		
 public class LoginServlet extends HttpServlet {
@@ -27,18 +25,17 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String user = request.getParameter("user");
 		String pwd = request.getParameter("pwd");
-		
-		String userID = getServletConfig().getInitParameter("user");
-		String password = getServletConfig().getInitParameter("password");
-		
-		if(userID.equals(user) && password.equals(pwd)) {
+		String validFirstName = "^[A-Z]{1}[a-z]{2,}";
+		Pattern pattern = Pattern.compile(validFirstName);
+		Matcher match = pattern.matcher(user);
+		if(match.matches()) {
 			request.setAttribute("user", user);
 			request.getRequestDispatcher("LoginSuccess.jsp").forward(request, response);
 			
 		}else {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Login.html");
 			PrintWriter out = response.getWriter();
-			out.println("<font color=red>Either user name or password is wrong</font>");
+			out.println("<font color=red>Incorrect Name , Please Enter The Correct Name</font>");
 			rd.include(request, response);
 		}
 		
