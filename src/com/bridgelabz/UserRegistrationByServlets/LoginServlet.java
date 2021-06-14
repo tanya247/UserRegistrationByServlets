@@ -26,16 +26,19 @@ public class LoginServlet extends HttpServlet {
 		String user = request.getParameter("user");
 		String pwd = request.getParameter("pwd");
 		String validFirstName = "^[A-Z]{1}[a-z]{2,}";
+		String validPassword = "^(?=.*[0-9])"+"(?=.*[a-z])(?=.*[A-Z])"+ "(?=.*[@\\-#$%^&+=])"+ "(?=\\S+$).{8,}$";
 		Pattern pattern = Pattern.compile(validFirstName);
 		Matcher match = pattern.matcher(user);
-		if(match.matches()) {
+		Pattern patterns = Pattern.compile(validPassword);
+		Matcher mat = patterns.matcher(pwd);
+		if(match.matches() && mat.matches()) {
 			request.setAttribute("user", user);
 			request.getRequestDispatcher("LoginSuccess.jsp").forward(request, response);
 			
 		}else {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/Login.html");
 			PrintWriter out = response.getWriter();
-			out.println("<font color=red>Incorrect Name , Please Enter The Correct Name</font>");
+			out.println("<font color=red>Incorrect Name or Password , Please Enter The Correct Name or Password</font>");
 			rd.include(request, response);
 		}
 		
